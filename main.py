@@ -102,9 +102,9 @@ def on_message(message):
 
         if message.content.startswith('!echval') and message.author.id in config['owner_id']:
             g_1 = message.content.split(None, 1)[1]
-            if g_1.startswith('await'):
+            if g_1.startswith('yield from '):
                 response = yield from eval(message.content.split(None, 2)[2])
-            elif g_1.startswith('exec'):
+            elif g_1.startswith('exec '):
                 exec(message.content.split(None, 2)[2])
                 response = False
             else:
