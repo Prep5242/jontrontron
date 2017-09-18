@@ -100,7 +100,7 @@ def on_message(message):
             if config['reload_response']: # If reload_response is blank, this won't trigger.
                 yield from client.send_message(message.channel, config['reload_response'])
 
-        if message.content.startswith('!echval') and message.author.id in config['owner-id']:
+        if message.content.startswith('!echval') and message.author.id in config['owner_id']:
             g_1 = message.content.split(None, 1)[1]
             if g_1.startswith('await'):
                 response = yield from eval(message.content.split(None, 2)[2])
