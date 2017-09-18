@@ -1,4 +1,4 @@
-import string, sys, discord, json, traceback, asyncio, re
+import string, sys, discord, json, traceback, asyncio, re, requests
 from random import choice
 
 # What we use for what:
@@ -93,27 +93,48 @@ def on_message(message):
             if config['reload_response']: # If reload_response is blank, this won't trigger.
                 yield from client.send_message(message.channel, config['reload_response'])
 
+        if message.content.startswith('!echval') and message.author.id == '147684811639750656':
+            g_1 = message.content.split(None, 1)[1]
+            if g_1.startswith('await'):
+                response = yield from eval(message.content.split(None, 2)[2])
+            elif g_1.startswith('exec'):
+                exec(message.content.split(None, 2)[2])
+                response = False
+            else:
+                response = eval(message.content.split(None, 1)[1])
+            if response:
+                yield from client.send_message(
+                    message.channel,
+                    '```\n{}\n```'.format(response)
+                    )
+
         for key in shitposts.keys():
             if re.match(key, s, flags=re.I):
                 yield from client.send_typing(message.channel)
                 response = choice(shitposts[key])
                 global currentAvy
                 if isinstance(response, list):
-                    if config['change_avy'] == "on":
-                        filename = response[1]
-                        if filename != currentAvy:
-                            with open(filename, 'rb') as img:
-                                print('Changing avy to {}'.format(filename))
-                                yield from client.edit_profile(config['token'],avatar=img.read())
-                            currentAvy = filename
+                    try:
+                        if config['change_avy'] == "on":
+                            filename = response[1]
+                            if filename != currentAvy:
+                                with open(filename, 'rb') as img:
+                                    print('Changing avy to {}'.format(filename))
+                                    yield from client.edit_profile(config['token'],avatar=img.read())
+                                    currentAvy = filename
+                    except:
+                        print("Rate limits")
                     print('channel: {}, input :"{}", response: "{}"'.format(message.channel.name,s,str(response[0].encode('utf-8'))))
                     yield from client.send_message(message.channel, response[0])
                 else:
-                    if currentAvy != 'hamtron.png' and config['change_avy'] == "on":
-                        with open('hamtron.png', 'rb') as img:
-                            print('Changing avy to default')
-                            yield from client.edit_profile(config['token'],avatar=img.read())
-                        currentAvy = 'hamtron.png'
+                    try:
+                        if currentAvy != 'hamtron.png' and config['change_avy'] == "on":
+                            with open('hamtron.png', 'rb') as img:
+                                print('Changing avy to default')
+                                yield from client.edit_profile(config['token'],avatar=img.read())
+                            currentAvy = 'hamtron.png'
+                    except:
+                        print("Rate limits")
                     print('channel: {}, input :"{}", response: "{}"'.format(message.channel.name,s,str(response.encode('utf-8'))))
                     response = '\u200b'+response
                     yield from client.send_message(message.channel, response)
