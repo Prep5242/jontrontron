@@ -1,0 +1,11 @@
+type in console y=1
+look for the really big js file
+beautify it(edited)
+with chrome's built in beautifier
+Ctrl+F
+isDeveloper
+go to the 3rd one
+double click on line number
+hit enter on console
+it will pause script because breakpoint
+close devloper console and you should have experiment menu in setting
